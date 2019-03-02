@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/MetalJester/LIRI-Node-App/issues"
   },
-  "homepage": "https://github.com/MetalJester/LIRI-Node-App#readme"
+  "homepage": "https://github.com/MetalJester/LIRI-Node-App#readme",
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
 }
