@@ -20,37 +20,50 @@
 //     }
 //   );
 
-// OMDB API and movie-this
 
+//Global variables
 var axios = require("axios");
+var liriCommand = process.argv[2];
 
-var nodeArgs = process.argv;
-
-var movieName = "";
-
-for (var i = 2; i < nodeArgs.length; i++) {
-    if (i > 2 && i < nodeArgs.length) {
-        movieName = movieName + "+" + nodeArgs[i];
-    }
-    else {
-        movieName += nodeArgs[i];
-    }
+switch (liriCommand) {
+    case "movie-this":
+    movieThis();
+    break;
 }
 
-var moveieQueryURL = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
 
-console.log(moveieQueryURL);
+// OMDB API and movie-this
 
-axios.get(moveieQueryURL).then(
-    function (response) {
-        console.log(`Title of the movie: ${response.data.Title}\n`,
-            `IMDB Rating of the movie: ${response.data.imdbRating}\n`,
-            `Year the movie came out: ${response.data.Year}\n`,
-            `Rotten Tomatoes Rating of the movie: ${response.data.Ratings[1].Value}\n`,
-            `Country where the movie was produced: ${response.data.Country}\n`,
-            `Language of the movie: ${response.data.Language}\n`,
-            `Plot of the movie: ${response.data.Plot}\n`,
-            `Actors in the movie: ${response.data.Actors}\n`)
+function movieThis () {
+    var nodeArgs = process.argv;
+    var movieName = "";
+    
+    for (var i = 3; i < nodeArgs.length; i++) {
+        if (i > 3 && i < nodeArgs.length) {
+            movieName = movieName + "+" + nodeArgs[i];
+        }
+        else {
+            movieName += nodeArgs[i];
+        }
+    }
+    
+    var moveieQueryURL = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+    
+    console.log(moveieQueryURL);
+    
+    axios.get(moveieQueryURL).then(
+        function (response) {
+            console.log(
+                `Title of the movie: ${response.data.Title}\n`,
+                `IMDB Rating of the movie: ${response.data.imdbRating}\n`,
+                `Year the movie came out: ${response.data.Year}\n`,
+                `Rotten Tomatoes Rating of the movie: ${response.data.Ratings[1].Value}\n`,
+                `Country where the movie was produced: ${response.data.Country}\n`,
+                `Language of the movie: ${response.data.Language}\n`,
+                `Plot of the movie: ${response.data.Plot}\n`,
+                `Actors in the movie: ${response.data.Actors}\n`)
+    
+      }
+    );
+}
 
-  }
-);
