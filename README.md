@@ -1,4 +1,4 @@
-# LIRI-Bot-App
+# LIRI-Node-App
 
 Welcome to my Liri Bot node app. You can use several different commands to look up movies, songs, and concerts. This app requires the installation of Node-Spotify-API, Axios, Moment, and DotEnv in order to run. You can do this by using the command "npm install." You will also need to acquire your own Spotify "client id" and "client secret" which can be found by visiting: https://developer.spotify.com/my-applications/#!/. This app can only be run in the command terminal. Once open in the command terminal, the user can use the following commands to gain information as described below:
 
