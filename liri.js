@@ -1,9 +1,3 @@
-// require('dotenv').config();
-
-// var keys = require("./keys.js");
-
-// var spotify = new Spotify(keys.spotify);
-
 // // Bands in town API and "concert-this" command
 // var axios = require("axios");
 
@@ -20,38 +14,47 @@
 //     }
 //   );
 
+require('dotenv').config();
 
 //Global variables
+var keys = require("./keys.js");
+// var spotify = new Spotify(keys.spotify);
 var axios = require("axios");
 var liriCommand = process.argv[2];
+var userChoice = process.argv.slice(3).join(" ");
 
+//switches for various commands
 switch (liriCommand) {
     case "movie-this":
     movieThis();
     break;
+
+    // case "spotify-this-song":
+    // spotifyThis();
+    // break;
+}
+
+// spotify-this-song function
+function spotifyThis () {
+
+    if (!userChoice) {
+        userChoice = "The Sign";
+    }
+
 }
 
 
-// OMDB API and movie-this
-
+//movie-this function for the OMDB API;
 function movieThis () {
-    var nodeArgs = process.argv;
-    var movieName = "";
     
-    for (var i = 3; i < nodeArgs.length; i++) {
-        if (i > 3 && i < nodeArgs.length) {
-            movieName = movieName + "+" + nodeArgs[i];
-        }
-        else {
-            movieName += nodeArgs[i];
-        }
+    // if the user doesn't add a movie name, then Mr. Nobody will be searched for as default
+    if (!userChoice) {
+        userChoice = "Mr. Nobody";
     }
-    
-    var moveieQueryURL = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
-    
-    console.log(moveieQueryURL);
-    
-    axios.get(moveieQueryURL).then(
+
+    var movieQueryURL = "http://www.omdbapi.com/?t=" + userChoice + "&y=&plot=short&apikey=trilogy";    
+       
+    axios.get(movieQueryURL).then(
         function (response) {
             console.log(
                 `Title of the movie: ${response.data.Title}\n`,
