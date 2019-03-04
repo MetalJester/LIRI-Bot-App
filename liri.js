@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 //Global variables
+var fs = require("fs");
 var keys = require("./keys.js");
 var axios = require("axios");
 var moment = require("moment");
@@ -8,19 +9,27 @@ var liriCommand = process.argv[2];
 var userChoice = process.argv.slice(3).join(" ");
 
 //switches for various commands
-switch (liriCommand) {
-    case "movie-this":
-        movieThis();
-        break;
 
-    case "spotify-this-song":
-        spotifyThis();
-        break;
-
-    case "concert-this":
-        concertThis();
-        break;
+function userCommand(liriCommand, userChoice) {
+    switch (liriCommand) {
+        case "movie-this":
+            movieThis();
+            break;
+    
+        case "spotify-this-song":
+            spotifyThis();
+            break;
+    
+        case "concert-this":
+            concertThis();
+            break;
+    
+        case "do-what-it-says":
+            doWhatItSays();
+    }
 }
+userCommand(liriCommand, userChoice);
+
 
 // Bands in town API and "concert-this" command
 function concertThis() {
@@ -35,16 +44,14 @@ function concertThis() {
         function (response) {
 
             if (response.data.length > 0) {
-                for (var i = 0; i <response.data.length; i++) {
+                for (var i = 0; i < response.data.length; i++) {
                     var concert = response.data[i];
-                    var concertTime = moment(concert.datetime, 'YYYY-MM-DDTHH:mm:ss').format('MM/DD/YYYY, h:mm A');
                     console.log(
                         `Venue: ${concert.venue.name}\n`,
                         `Location: ${concert.venue.city}, ${concert.venue.region}, ${concert.venue.country}\n`,
-                        `Date: ${concertTime}\n`,
-                        );
-                        
-                       
+                        `Date: ${moment(concert.datetime, 'YYYY-MM-DDTHH:mm:ss').format('MM/DD/YYYY, h:mm A')}\n`,
+                    );
+
                 }
 
             } else {
@@ -113,4 +120,19 @@ function movieThis() {
         }
     );
 };
+
+function doWhatItSays() {
+
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        if (error) {
+            return console.log("Unable to comply." + error);
+        } else {
+            var dataArr = data.split(",");
+            liriCommand = dataArr[0];
+            userChoice = dataArr[1];
+            userCommand(liriCommand, userChoice);
+
+        }
+    })
+}
 
