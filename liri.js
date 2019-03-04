@@ -1,24 +1,9 @@
-// // Bands in town API and "concert-this" command
-// var axios = require("axios");
-
-// var artist = process.argv[2];
-
-// // var command = process.argv[2];
-
-// var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
-// console.log(queryURL);
-
-// axios.get(queryURL).then(
-//     function(response) {
-//       console.log(JSON.stringify("Venue Name: " + response.venue));
-//     }
-//   );
-
 require('dotenv').config();
 
 //Global variables
 var keys = require("./keys.js");
 var axios = require("axios");
+var moment = require("moment");
 var liriCommand = process.argv[2];
 var userChoice = process.argv.slice(3).join(" ");
 
@@ -31,7 +16,46 @@ switch (liriCommand) {
     case "spotify-this-song":
         spotifyThis();
         break;
+
+    case "concert-this":
+        concertThis();
+        break;
 }
+
+// Bands in town API and "concert-this" command
+function concertThis() {
+    //if user doesn't add a choice then auto search for "Kiss"
+    if (!userChoice) {
+        userChoice = "Kiss";
+    };
+
+    var queryURL = "https://rest.bandsintown.com/artists/" + userChoice + "/events?app_id=codingbootcamp";
+
+    axios.get(queryURL).then(
+        function (response) {
+
+            if (response.data.length > 0) {
+                for (var i = 0; i <response.data.length; i++) {
+                    var concert = response.data[i];
+                    var concertTime = moment(concert.datetime, 'YYYY-MM-DDTHH:mm:ss').format('MM/DD/YYYY, h:mm A');
+                    console.log(
+                        `Venue: ${concert.venue.name}\n`,
+                        `Location: ${concert.venue.city}, ${concert.venue.region}, ${concert.venue.country}\n`,
+                        `Date: ${concertTime}\n`,
+                        );
+                        
+                       
+                }
+
+            } else {
+                console.log("No concerts found.");
+            }
+        }
+    )
+
+
+}
+
 
 // spotify-this-song function
 function spotifyThis() {
@@ -39,6 +63,7 @@ function spotifyThis() {
     var Spotify = require('node-spotify-api');
     var spotify = new Spotify(keys.spotify);
 
+    // if the user doesn't add a song then "The Sign" will autofill
     if (!userChoice) {
         userChoice = "The Sign";
     }
@@ -47,18 +72,19 @@ function spotifyThis() {
         .search({ type: 'track', query: userChoice })
         .then(function (data) {
             var songInfo = data.tracks.items;
-            for (var i = 0; i < 1; i++){
+            for (var i = 0; i < 1; i++) {
                 console.log(
                     `Artist(s): ${songInfo[i].artists[0].name}\n`,
                     `Song Title: ${songInfo[i].name}\n`,
                     `Preview spotify link: ${songInfo[i].preview_url}\n`,
-                    `Album Title: ${songInfo[i].album.name}\n`)}
+                    `Album Title: ${songInfo[i].album.name}\n`)
+            }
         })
         .catch(function (err) {
             console.log(err);
         });
 
-}
+};
 
 
 
@@ -86,5 +112,5 @@ function movieThis() {
 
         }
     );
-}
+};
 
